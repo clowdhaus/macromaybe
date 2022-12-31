@@ -1,21 +1,28 @@
 use std::fmt;
 
-use clap::ValueEnum;
+use clap::{ValueEnum, builder::PossibleValue};
 use seq_macro::seq;
 use serde::{Deserialize, Serialize};
 
-// #[derive(Clone, Copy, Debug, Display, Serialize, Deserialize)]
+// #[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 // pub enum ClusterVersion {
-//     #[strum(serialize = "1.20")]
 //     V20,
-//     #[strum(serialize = "1.21")]
 //     V21,
-//     #[strum(serialize = "1.22")]
 //     V22,
-//     #[strum(serialize = "1.23")]
 //     V23,
-//     #[strum(serialize = "1.24")]
 //     V24,
+// }
+
+// impl fmt::Display for ClusterVersion {
+//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+//         match *self {
+//             ClusterVersion::V20 => write!(f, "1.20"),
+//             ClusterVersion::V21 => write!(f, "1.21"),
+//             ClusterVersion::V22 => write!(f, "1.22"),
+//             ClusterVersion::V23 => write!(f, "1.23"),
+//             ClusterVersion::V24 => write!(f, "1.24"),
+//         }
+//     }
 // }
 
 // impl ValueEnum for ClusterVersion {
@@ -29,13 +36,13 @@ use serde::{Deserialize, Serialize};
 //         ]
 //     }
 
-//     fn to_possible_value<'a>(&self) -> Option<clap::builder::PossibleValue> {
+//     fn to_possible_value<'a>(&self) -> Option<PossibleValue> {
 //         match self {
-//             Self::V20 => Some(clap::builder::PossibleValue::new("1.20")),
-//             Self::V21 => Some(clap::builder::PossibleValue::new("1.21")),
-//             Self::V22 => Some(clap::builder::PossibleValue::new("1.22")),
-//             Self::V23 => Some(clap::builder::PossibleValue::new("1.23")),
-//             Self::V24 => Some(clap::builder::PossibleValue::new("1.24")),
+//             Self::V20 => Some(PossibleValue::new("1.20")),
+//             Self::V21 => Some(PossibleValue::new("1.21")),
+//             Self::V22 => Some(PossibleValue::new("1.22")),
+//             Self::V23 => Some(PossibleValue::new("1.23")),
+//             Self::V24 => Some(PossibleValue::new("1.24")),
 //         }
 //     }
 // }
@@ -43,14 +50,13 @@ use serde::{Deserialize, Serialize};
 seq!(N in 20..=24 {
     #[derive(Clone, Copy, Debug, Serialize, Deserialize)]
     pub enum ClusterVersion {
-        #( V~N, )* // V20
+        #( V~N, )*
     }
 
     impl fmt::Display for ClusterVersion {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
             match *self {
                 #( ClusterVersion::V~N => write!(f, "1.{}", N), )*
-                // ClusterVersion::V20 => write!(f, "1.{}", 20),
             }
         }
     }
@@ -58,14 +64,13 @@ seq!(N in 20..=24 {
     impl ValueEnum for ClusterVersion {
         fn value_variants<'a>() -> &'a [Self] {
             &[
-                #( Self::V~N, )* // Self::V20,
+                #( Self::V~N, )*
             ]
         }
 
-        fn to_possible_value<'a>(&self) -> Option<clap::builder::PossibleValue> {
+        fn to_possible_value<'a>(&self) -> Option<PossibleValue> {
             match self {
-                #( Self::V~N => Some(clap::builder::PossibleValue::new(format!("1.{}", N))), )*
-                // Self::V20 => Some(clap::builder::PossibleValue::new("1.20")),
+                #( Self::V~N => Some(PossibleValue::new(format!("1.{}", N))), )*
             }
         }
     }
