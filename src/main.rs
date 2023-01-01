@@ -1,6 +1,6 @@
 use std::fmt;
 
-use clap::{ValueEnum, builder::PossibleValue};
+use clap::{builder::PossibleValue, ValueEnum};
 use seq_macro::seq;
 use serde::{Deserialize, Serialize};
 
